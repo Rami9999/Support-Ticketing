@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Comment;
 use Storage;
 use Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,7 +56,12 @@ class Post extends Model
 
     public function likes()
     {
-        return $this->belongsToMany(User::class, 'post_like')->withTimestamps();
+        return $this->belongsToMany(User::class, 'post_like');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function categories(){

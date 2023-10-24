@@ -11,6 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\Post;
+use App\Models\Comment;
 
 class User extends Authenticatable
 {
@@ -64,6 +65,11 @@ class User extends Authenticatable
     public function likes()
     {
         return $this->belongsToMany(Post::class, 'post_like')->withTimestamps();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Post::class)->withTimestamps();
     }
 
     public function hasLiked(Post $post)
