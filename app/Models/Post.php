@@ -83,4 +83,15 @@ class Post extends Model
         return ($isUrl) ? $this->image:Storage::disk('public')->url($this->image);
     }
 
+    public function scopePopular($query)
+    {
+        $query->withCount('likes')
+            ->orderBy('likes_count','DESC');
+    }
+    
+    public function scopeSearch($query,$search='')
+    {
+        $query->where('title','like',"%{$search}%");
+    }
+
 }
