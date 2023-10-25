@@ -13,13 +13,44 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Post;
 use App\Models\Comment;
 
-class User extends Authenticatable
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+
+
+    const ROLE_ADMIN = 'ADMIN';
+    const ROLE_EDITOR = 'EDITOR';
+    const ROLE_USER = 'USER';
+
+    const ROLES = [
+        self::ROLE_ADMIN => 'Admin',
+        self::ROLE_EDITOR => 'Editor',
+        self::ROLE_USER => 'User',
+
+    ];
+
+    const ROLE_DEFAULT = self::ROLE_USER;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->can('view-admin',User::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role ===self::ROLE_ADMIN;
+    }
+
+    public function isEditor()
+    {
+        return $this->role ===self::ROLE_EDITOR;
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +61,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**

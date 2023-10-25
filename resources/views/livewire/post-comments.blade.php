@@ -7,7 +7,7 @@
             cols="30" rows="7"></textarea>
         <button
             wire:click="postComment"
-            class="mt-3 inline-flex items-center justify-center h-10 px-4 font-medium tracking-wide text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none">
+            class="mt-3 inline-flex items-center justify-center h-10 px-4 font-medium tracking-wide text-white transition duration-200 bg-blue-700 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none">
             Post Comment
         </button>
     @else
