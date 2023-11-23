@@ -2,30 +2,33 @@
 
 namespace App\Livewire;
 
-use App\Models\Post;
 use App\Models\Category;
+use App\Models\Post;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Url;
-use Livewire\Attributes\On;
+
 class PostList extends Component
 {
-
     use WithPagination;
+
     #[Url()]
     public $sort = 'desc';
-    
-    #[Url()]
-    public $search="";
 
     #[Url()]
-    public $category='';
+    public $search = '';
+
+    #[Url()]
+    public $category = '';
+
+    #[Url()]
+    public $popular = false;
 
     public function setSort($sort)
     {
-        $this->sort = ($sort === 'desc' ) ? 'desc':'asc';
-        //$this->resetPage();
+        $this->sort = ($sort === 'desc') ? 'desc' : 'asc';
     }
 
     #[On('search')]
@@ -37,25 +40,35 @@ class PostList extends Component
 
     public function clearFilters()
     {
-        $this->search = "";
-        $this->category = "";
+        $this->search = '';
+        $this->category = '';
         $this->resetPage();
     }
 
     #[Computed()]
-    public function posts(){
+    public function posts()
+    {
         return Post::published()
-        ->when($this->activeCategory,function($query){
-            $query->WithCategory($this->category);
-        })
-        ->where('title','like','%'.$this->search.'%')
-        ->orderBy('published_at',$this->sort)
-        ->paginate(5);
+            ->with('author', 'categories')
+            ->when($this->activeCategory, function ($query) {
+                $query->withCategory($this->category);
+            })
+            ->when($this->popular, function ($query) {
+                $query->popular();
+            })
+            ->search($this->search)
+            ->orderBy('published_at', $this->sort)
+            ->paginate(3);
     }
 
     #[Computed()]
-    public function activeCategory(){
-        return Category::where('slug',$this->category)->first();
+    public function activeCategory()
+    {
+        if ($this->category === null || $this->category === '') {
+            return null;
+        }
+
+        return Category::where('slug', $this->category)->first();
     }
 
     public function render()

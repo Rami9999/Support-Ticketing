@@ -21,4 +21,12 @@ class PostController extends Controller
             'categories' =>$categories ,
         ]);
     }
+
+    public function show(Post $post)
+    {
+
+        return view('posts.show',[
+            'post' =>$post ,
+        ]);
+    }
 }

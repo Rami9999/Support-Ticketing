@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Comment;
 use Storage;
 use Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,7 +56,12 @@ class Post extends Model
 
     public function likes()
     {
-        return $this->belongsToMany(User::class, 'post_like')->withTimestamps();
+        return $this->belongsToMany(User::class, 'post_like');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function categories(){
@@ -75,6 +81,17 @@ class Post extends Model
         $isUrl = str_contains($this->image,'http');
 
         return ($isUrl) ? $this->image:Storage::disk('public')->url($this->image);
+    }
+
+    public function scopePopular($query)
+    {
+        $query->withCount('likes')
+            ->orderBy('likes_count','DESC');
+    }
+    
+    public function scopeSearch($query,$search='')
+    {
+        $query->where('title','like',"%{$search}%");
     }
 
 }
