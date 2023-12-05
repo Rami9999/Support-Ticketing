@@ -5,7 +5,7 @@ namespace App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-
+use App\Filament\Resources\PostResource\Widgets\PostsPerMonthChart;
 class ListPosts extends ListRecords
 {
     protected static string $resource = PostResource::class;
@@ -14,6 +14,12 @@ class ListPosts extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+        ];
+    }
+    protected function getFooterWidgets(): array
+    {
+        return [
+            PostsPerMonthChart::class,
         ];
     }
 }

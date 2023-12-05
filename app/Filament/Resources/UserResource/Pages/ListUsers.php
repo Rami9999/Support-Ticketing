@@ -5,6 +5,7 @@ namespace App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\UserResource\Widgets\UserStatsWidget;
 
 class ListUsers extends ListRecords
 {
@@ -16,4 +17,11 @@ class ListUsers extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            UserStatsWidget::class,
+        ];
+    }
+    
 }
